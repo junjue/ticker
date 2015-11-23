@@ -42,7 +42,7 @@ public class TableData extends AbstractTableModel {
         }
 
         for (SymbolData symbolData : symbolController.getSymbols("")) {
-            RecordData recordData = new RecordData(new MarketData("US"), symbolData, "2", "222");
+            RecordData recordData = new RecordData(new MarketData("US"), symbolData, "0", "0","0");
             data.add(recordData);
         }
     }
@@ -82,6 +82,8 @@ public class TableData extends AbstractTableModel {
             return recordData.getProfit();
         else if (columnIndex == 3)
             return recordData.getMmp();
+        else if (columnIndex == 4)
+            return recordData.getMmp2();
         return null;
     }
      
@@ -95,5 +97,7 @@ public class TableData extends AbstractTableModel {
             recordData.setProfit((String)aValue);
         else if (columnIndex == 3)
             recordData.setMmp((String)aValue);
+        else if (columnIndex == 4)
+            recordData.setMmp2((String)aValue);
     }
 }

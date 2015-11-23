@@ -1,1 +1,1 @@
-Market|Symbol|Profit|MMP
+Market|Symbol|Profit|MMP|MMP2

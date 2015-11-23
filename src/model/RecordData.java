@@ -5,12 +5,14 @@ public class RecordData {
     private SymbolData symbolData;
     private String profit;
     private String mmp;
+    private String mmp2;
 
-    public RecordData(MarketData marketData, SymbolData symbolData, String profit, String mmp) {
+    public RecordData(MarketData marketData, SymbolData symbolData, String profit, String mmp, String mmp2) {
         this.marketData = marketData;
         this.symbolData = symbolData;
         this.profit = profit;
         this.mmp = mmp;
+        this.mmp2 = mmp2;
     }
 
     public MarketData getMarketData() {
@@ -43,5 +45,12 @@ public class RecordData {
 
     public void setMmp(String mmp) {
         this.mmp = mmp;
+    }
+    public String getMmp2() {
+        return mmp2;
+    }
+
+    public void setMmp2(String mmp2) {
+        this.mmp2 = mmp2;
     }
 }

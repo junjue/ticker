@@ -17,7 +17,6 @@ public class SymbolController {
             instance = new SymbolController();
         return instance;
     }
-
     public List<SymbolData> getSymbols(String marketName) {
         List<SymbolData> symbolDataList = new ArrayList<>();
         try {
