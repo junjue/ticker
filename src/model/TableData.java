@@ -41,10 +41,12 @@ public class TableData extends AbstractTableModel {
             e.printStackTrace();
         }
 
-        for (SymbolData symbolData : symbolController.getSymbols("")) {
-            RecordData recordData = new RecordData(new MarketData("US"), symbolData, "0", "0","0");
-            data.add(recordData);
-        }
+
+        //for (SymbolData symbolData : symbolController.getSymbols("")) {
+        RecordData recordData = new RecordData(new MarketData("US"), new SymbolData("Please Choose One"), "2", "222","2");
+        data.add(recordData);
+        //}
+
     }
      
     public int getRowCount() {
