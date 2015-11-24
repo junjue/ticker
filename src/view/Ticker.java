@@ -1,22 +1,15 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
-
 import controller.SymbolController;
 import model.SymbolData;
 import model.TableData;
+
+import javax.swing.*;
+import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class Ticker extends JPanel {
 
@@ -30,15 +23,11 @@ public class Ticker extends JPanel {
         setLayout(new BorderLayout());
 
         model = new TableData(dataFilePath);
-
         table = new JTable();
         table.setModel(model);
         table.createDefaultColumnsFromModel();
         table.setAutoCreateRowSorter(true);
         model.addTableModelListener(table);
-
-        JScrollPane scrollpane = new JScrollPane(table);
-        add(scrollpane);
 
         TableColumn symbolColumn = table.getColumnModel().getColumn(1);
         JComboBox<String> symbolComboBox = new JComboBox<>();
@@ -46,7 +35,24 @@ public class Ticker extends JPanel {
         for (SymbolData symbolData : symbolDataList) {
             symbolComboBox.addItem(symbolData.getName());
         }
+        symbolComboBox.setEditable(true);
         symbolColumn.setCellEditor(new DefaultCellEditor(symbolComboBox));
+
+        JFrame myFrame = new JFrame("Ticker");
+        myFrame.setLocation(100, 100);
+        myFrame.setSize(new Dimension(1024, 800));
+
+        GridLayout layout = new GridLayout(2, 1);
+        myFrame.getContentPane().setLayout(layout);
+
+        JPanel jp = new JPanel();
+        jp.setBackground(new Color(0x00555555));
+
+        myFrame.getContentPane().add(table);
+        myFrame.getContentPane().add(jp);
+
+        myFrame.setVisible(true);
+        myFrame.addWindowListener(new WindowCloser());
     }
 
     public Dimension getPreferredSize() {
@@ -54,19 +60,7 @@ public class Ticker extends JPanel {
     }
 
     public static void main(String s[]) {
-        JFrame frame = new JFrame("Data File Table");
-        Ticker panel;
-
-        panel = new Ticker("tables.txt");
-
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setForeground(Color.black);
-        frame.setBackground(Color.lightGray);
-        frame.getContentPane().add(panel, "Center");
-
-        frame.setSize(panel.getPreferredSize());
-        frame.setVisible(true);
-        frame.addWindowListener(new WindowCloser());
+        new Ticker("tables.txt");
     }
 }
 
