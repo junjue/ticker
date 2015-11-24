@@ -32,8 +32,7 @@ public class TableData extends AbstractTableModel {
             FileInputStream fin =  new FileInputStream(datafile);
             BufferedReader br = new BufferedReader(new InputStreamReader(fin));
             // extract column names
-            StringTokenizer st1 =
-                    new StringTokenizer(br.readLine(), "|");
+            StringTokenizer st1 = new StringTokenizer(br.readLine(), "|");
             while(st1.hasMoreTokens())
                 columnNames.addElement(st1.nextToken());
             br.close();
@@ -43,7 +42,7 @@ public class TableData extends AbstractTableModel {
 
 
         //for (SymbolData symbolData : symbolController.getSymbols("")) {
-        RecordData recordData = new RecordData(new MarketData("US"), new SymbolData("Please Choose One"), "2", "222","2");
+        RecordData recordData = new RecordData(new MarketData("US"), new SymbolData("Choose Symbol"), 100, 100,5,5000,0.02,20,0.6,20,10,45,300,300);
         data.add(recordData);
         //}
 
@@ -81,11 +80,29 @@ public class TableData extends AbstractTableModel {
         else if (columnIndex == 1)
             return recordData.getSymbolData().getName();
         else if (columnIndex == 2)
-            return recordData.getProfit();
+            return recordData.getPercentageOfShares();
         else if (columnIndex == 3)
-            return recordData.getMmp();
+            return recordData.getOfferedShares();
         else if (columnIndex == 4)
-            return recordData.getMmp2();
+            return recordData.getPercentageOfWall();
+        else if (columnIndex == 5)
+            return  recordData.getSharesOfWall();
+        else if (columnIndex == 6)
+            return recordData.getDollarAboveWall();
+        else if (columnIndex == 7)
+            return recordData.getPercentageRemainingOfWall();
+        else if (columnIndex == 8)
+            return recordData.getMpp();
+        else if (columnIndex == 9)
+            return recordData.getMppLose();
+        else if (columnIndex == 10)
+            return recordData.getT1();
+        else if (columnIndex == 11)
+            return recordData.getT2();
+        else if (columnIndex == 12)
+            return recordData.getT3();
+        else if (columnIndex == 13)
+            return recordData.getT4();
         return null;
     }
      
@@ -96,10 +113,28 @@ public class TableData extends AbstractTableModel {
         else if (columnIndex == 1)
             recordData.getSymbolData().setName((String)aValue);
         else if (columnIndex == 2)
-            recordData.setProfit((String)aValue);
+            recordData.setPercentageOfShares((int)aValue);
         else if (columnIndex == 3)
-            recordData.setMmp((String)aValue);
+            recordData.setOfferedShares((int)aValue);
         else if (columnIndex == 4)
-            recordData.setMmp2((String)aValue);
+            recordData.setPercentageOfWall((int)aValue);
+        else if (columnIndex == 5)
+            recordData.setSharesOfWall((int)aValue);
+        else if (columnIndex ==6)
+            recordData.setDollarAboveWall((double)aValue);
+        else if (columnIndex ==7)
+            recordData.setPercentageRemainingOfWall((int)aValue);
+        else if (columnIndex ==8)
+            recordData.setMpp((double)aValue);
+        else if (columnIndex ==9)
+            recordData.setMppLose((int)aValue);
+        else if (columnIndex == 10)
+            recordData.setT1((int)aValue);
+        else if (columnIndex == 11)
+            recordData.setT2((int)aValue);
+        else if (columnIndex == 12)
+            recordData.setT3((int)aValue);
+        else if (columnIndex == 13)
+            recordData.setT4((int)aValue);
     }
 }
