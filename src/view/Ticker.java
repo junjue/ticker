@@ -49,6 +49,7 @@ public class Ticker extends JFrame {
          symbolColumn.setCellEditor(new DefaultCellEditor(symbolComboBox));
          return table;
     }
+
     public JButton buttonInit(){
         JButton button1 = new JButton();
 
