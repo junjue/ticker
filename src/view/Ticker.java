@@ -1,5 +1,6 @@
 package view;
-
+import javafx.scene.chart.Chart;
+import model.LineChart;
 import controller.DropdownGenerator;
 import controller.SymbolController;
 import model.SymbolData;
@@ -8,6 +9,8 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.ui.RefineryUtilities;
+
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -128,7 +131,7 @@ public class Ticker extends JFrame {
         //add charts
         ChartPanel cp = drawChart();
 //        jpSplit.add(cp, BorderLayout.CENTER);
-        ChartPanel cp2 = drawChart();
+        ChartPanel cp2 = lineChart();
         //create holder panel to hold all charts
         JPanel chartHolder = new JPanel();
         chartHolder.setLayout(new GridLayout(1,2));
@@ -147,7 +150,11 @@ public class Ticker extends JFrame {
         myFrame.setVisible(true);
         myFrame.addWindowListener(new WindowCloser());
     }
-
+    public ChartPanel lineChart(){
+        JFreeChart chart = LineChart.createLineChart();
+        ChartPanel cp = new ChartPanel(chart);
+        return cp;
+    }
     public ChartPanel drawChart(){
         DefaultPieDataset data = new DefaultPieDataset();
         data.setValue("Category 1", 43.1);
