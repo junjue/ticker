@@ -14,50 +14,52 @@ import java.util.List;
 public class Ticker extends JFrame {
 
     public Ticker(String dataFilePath) {
-    	JTable table = tableInit(dataFilePath);
-    	layoutInit(table);
+        JTable table = tableInit(dataFilePath);
+        layoutInit(table);
 
         Font f;
         f = new Font("SanSerif", Font.PLAIN, 24);
         setFont(f);
-        getContentPane().setLayout(new BorderLayout());    
+        getContentPane().setLayout(new BorderLayout());
     }
 
     public Dimension getPreferredSize() {
         return new Dimension(400, 300);
     }
-    
-    public JTable tableInit(String dataFilePath){
-    	 JTable table;
-         TableData model;
-         model = new TableData(dataFilePath);
-         table = new JTable();
-         table.setModel(model);
-         table.setRowHeight(25);
-         table.createDefaultColumnsFromModel();
-         table.setAutoCreateRowSorter(true);
-         model.addTableModelListener(table);
 
-         TableColumn symbolColumn = table.getColumnModel().getColumn(1);      
-         
-         JComboBox<String> symbolComboBox = new JComboBox<>();
-         List<SymbolData> symbolDataList = SymbolController.getInstance().getSymbols("");
-         for (SymbolData symbolData : symbolDataList) {
-             symbolComboBox.addItem(symbolData.getName());
-         }
-         symbolComboBox.setEditable(true);
-         symbolColumn.setCellEditor(new DefaultCellEditor(symbolComboBox));
-         return table;
+    public JTable tableInit(String dataFilePath) {
+        JTable table;
+        TableData model;
+        model = new TableData(dataFilePath);
+        table = new JTable();
+        table.setModel(model);
+        table.setRowHeight(25);
+        table.createDefaultColumnsFromModel();
+        table.setAutoCreateRowSorter(true);
+        model.addTableModelListener(table);
+
+        TableColumn symbolColumn = table.getColumnModel().getColumn(1);
+
+        JComboBox<String> symbolComboBox = new JComboBox<>();
+        List<SymbolData> symbolDataList = SymbolController.getInstance().getSymbols("");
+        for (SymbolData symbolData : symbolDataList) {
+            symbolComboBox.addItem(symbolData.getName());
+        }
+        symbolComboBox.setEditable(true);
+        symbolColumn.setCellEditor(new DefaultCellEditor(symbolComboBox));
+        return table;
     }
-    public JButton buttonInit(){
+
+    public JButton buttonInit() {
         JButton button1 = new JButton();
 
 
         return button1;
     }
-    public void layoutInit(JTable table){
-    	
-    	JFrame myFrame = new JFrame("Algo v1.0");
+
+    public void layoutInit(JTable table) {
+
+        JFrame myFrame = new JFrame("Algo v1.0");
         myFrame.setLocation(200, 100);
         myFrame.setSize(new Dimension(1100, 800));
 
@@ -77,15 +79,15 @@ public class Ticker extends JFrame {
         JButton button_2 = new JButton();
         button_2.setText("Close");
         jpInput.add(button_2);
-        
-        
+
+
         //center panel split for TickData and Charts
         JPanel jpSplit = new JPanel();
         jpSplit.setLayout(new GridLayout(1, 2));
         jpSplit.add(new JButton());
         jpSplit.add(new JButton());
         //Bottom panel for OrderBook
-        JPanel jpResult = new JPanel();        
+        JPanel jpResult = new JPanel();
         jpResult.setBackground(new Color(0x00555555));
 
         myFrame.getContentPane().add(jpInput);

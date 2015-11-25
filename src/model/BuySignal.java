@@ -6,16 +6,16 @@ package model;
 public class BuySignal {
 
     private int percentageOfShares;
-    private  int offeredShares;
-    private  int percentageOfWall;
+    private int offeredShares;
+    private int percentageOfWall;
     private int sharesOfWall;
     private double dollarAboveWall;
     private int percentageRemainingOfWall;
 
     public BuySignal(int percentageOfShares, int offeredShares, int percentageOfWall, int sharesOfWall,
-                     double dollarAboveWall, int percentageRemainingOfWall){
+                     double dollarAboveWall, int percentageRemainingOfWall) {
         this.percentageOfShares = percentageOfShares;
-        this.offeredShares =  offeredShares;
+        this.offeredShares = offeredShares;
         this.percentageOfWall = percentageOfWall;
         this.sharesOfWall = sharesOfWall;
         this.dollarAboveWall = dollarAboveWall;

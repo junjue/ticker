@@ -4,8 +4,9 @@ package model;
  * Created by junjue on 11/24/2015.
  */
 public class TimeParameters {
-    private int t1,t2,t3,t4;
-    public TimeParameters(int t1, int t2, int t3, int t4){
+    private int t1, t2, t3, t4;
+
+    public TimeParameters(int t1, int t2, int t3, int t4) {
         this.t1 = t1;
         this.t2 = t2;
         this.t3 = t3;
