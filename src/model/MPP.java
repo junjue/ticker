@@ -5,9 +5,9 @@ package model;
  */
 public class MPP {
     private double mPP;
-    private  int mPPLose;
+    private int mPPLose;
 
-    public MPP(double mPP, int mPPLose){
+    public MPP(double mPP, int mPPLose) {
         this.mPP = mPP;
         this.mPPLose = mPPLose;
     }
