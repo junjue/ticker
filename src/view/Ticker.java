@@ -1,6 +1,8 @@
 package view;
 
+import controller.DropdownGenerator;
 import controller.SymbolController;
+import model.MPP;
 import model.SymbolData;
 import model.TableData;
 
@@ -12,6 +14,12 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class Ticker extends JFrame {
+
+    public enum COLUMN{
+        MARKET,
+        SYMBOL,
+        MPP
+    }
 
     public Ticker(String dataFilePath) {
         JTable table = tableInit(dataFilePath);
@@ -47,6 +55,15 @@ public class Ticker extends JFrame {
         }
         symbolComboBox.setEditable(true);
         symbolColumn.setCellEditor(new DefaultCellEditor(symbolComboBox));
+
+        TableColumn mppColumn = table.getColumnModel().getColumn(9);
+        JComboBox<String> mppComboBox = new JComboBox<>();
+        List<Integer> mppDataList = DropdownGenerator.getInstance().getIntArrayFromFile("mpp.txt");
+        for (int mpp : mppDataList) {
+            mppComboBox.addItem(String.valueOf(mpp));
+        }
+        mppComboBox.setEditable(true);
+        mppColumn.setCellEditor(new DefaultCellEditor(mppComboBox));
         return table;
     }
 

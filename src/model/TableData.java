@@ -42,6 +42,7 @@ public class TableData extends AbstractTableModel {
 
 
         //for (SymbolData symbolData : symbolController.getSymbols("")) {
+
         RecordData recordData = new RecordData(new MarketData("US"), new SymbolData("Choose Symbol"), 100, 100, 5, 5000, 0.02, 20, 0.6, 20, 10, 45, 300, 300);
         data.add(recordData);
         //}
@@ -127,7 +128,7 @@ public class TableData extends AbstractTableModel {
         else if (columnIndex == 8)
             recordData.setMpp(Double.parseDouble((String) aValue));
         else if (columnIndex == 9)
-            recordData.setMppLose(Integer.parseInt((String) aValue));
+            recordData.setMppLose((int) aValue);
         else if (columnIndex == 10)
             recordData.setT1(Integer.parseInt((String) aValue));
         else if (columnIndex == 11)
