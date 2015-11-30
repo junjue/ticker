@@ -1,9 +1,8 @@
 package view;
-import model.LineChart;
+import model.*;
+import model.TableData;
 import controller.DropdownGenerator;
 import controller.SymbolController;
-import model.SymbolData;
-import model.TableData;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import javax.swing.*;
@@ -29,6 +28,7 @@ public class Ticker extends JFrame {
     public Dimension getPreferredSize() {
         return new Dimension(400, 300);
     }
+
     //table initialization
     public JTable tableInit(String dataFilePath) {
         JTable table;
@@ -51,19 +51,21 @@ public class Ticker extends JFrame {
         getIntArrayFromFile(table, "mppLose.txt", 9);
         return table;
     }
+
     //generate string drop-down menu from file
-    public void getStringListFromFile(JTable table, String filename, int columnNumber){
+    public void getStringListFromFile(JTable table, String filename, int columnNumber) {
         TableColumn addDropdownColumn = table.getColumnModel().getColumn(columnNumber);
-        JComboBox <String> columnComboBox = new JComboBox<>();
+        JComboBox<String> columnComboBox = new JComboBox<>();
         List<String> columnDataList = DropdownGenerator.getInstance().getStringListFromFile(filename);
-        for (String x : columnDataList){
+        for (String x : columnDataList) {
             columnComboBox.addItem(String.valueOf(x));
         }
         columnComboBox.setEditable(true);
         addDropdownColumn.setCellEditor(new DefaultCellEditor(columnComboBox));
     }
+
     //generate symbol drop down menu from file
-    public void getSymbolFromFile(JTable table, int columnNumber){
+    public void getSymbolFromFile(JTable table, int columnNumber) {
         TableColumn symbolColumn = table.getColumnModel().getColumn(columnNumber);
         JComboBox<String> symbolComboBox = new JComboBox<>();
         List<SymbolData> symbolDataList = SymbolController.getInstance().getSymbols("");
@@ -73,23 +75,25 @@ public class Ticker extends JFrame {
         symbolComboBox.setEditable(true);
         symbolColumn.setCellEditor(new DefaultCellEditor(symbolComboBox));
     }
+
     //generate int drop-down menu from file
-    public void getIntArrayFromFile(JTable table, String filename, int columnNumber){
+    public void getIntArrayFromFile(JTable table, String filename, int columnNumber) {
         TableColumn addDropdownColumn = table.getColumnModel().getColumn(columnNumber);
-        JComboBox <String> columnComboBox = new JComboBox<>();
+        JComboBox<String> columnComboBox = new JComboBox<>();
         List<Integer> columnDataList = DropdownGenerator.getInstance().getIntArrayFromFile(filename);
-        for (int x : columnDataList){
+        for (int x : columnDataList) {
             columnComboBox.addItem(String.valueOf(x));
         }
         columnComboBox.setEditable(true);
         addDropdownColumn.setCellEditor(new DefaultCellEditor(columnComboBox));
     }
+
     //generate float drop-down menu from file
-    public void getFloatArrayFromFile(JTable table, String filename, int columnNumber){
+    public void getFloatArrayFromFile(JTable table, String filename, int columnNumber) {
         TableColumn addDropdownColumn = table.getColumnModel().getColumn(columnNumber);
-        JComboBox <String> columnComboBox = new JComboBox<>();
+        JComboBox<String> columnComboBox = new JComboBox<>();
         List<Float> columnDataList = DropdownGenerator.getInstance().getFloatArrayFromFile(filename);
-        for (float x : columnDataList){
+        for (float x : columnDataList) {
             columnComboBox.addItem(String.valueOf(x));
         }
         columnComboBox.setEditable(true);
@@ -104,37 +108,55 @@ public class Ticker extends JFrame {
         //set grid layout 3*1
         GridLayout gridLayout = new GridLayout(3, 1);
         myFrame.getContentPane().setLayout(gridLayout);
-
         //top panel for input
         JPanel jpInput = new JPanel();
         jpInput.setBackground(new Color(0x003F3E));
         jpInput.add(table);
         //added buttons
-        JButton button = new JButton();
-        button.setText("Submit");
-        jpInput.add(button);
-        JButton button_1 = new JButton();
-        button_1.setText("Cancel");
-        jpInput.add(button_1);
-        JButton button_2 = new JButton();
-        button_2.setText("Close");
-        jpInput.add(button_2);
-
+        JButton submitButton = new JButton("Submit");
+        jpInput.add(submitButton);
+        JButton cancelButton = new JButton("Charts");
+        jpInput.add(cancelButton);
+        JButton closeButton = new JButton("Close");
+        jpInput.add(closeButton);
         //center panel split for TickData and Charts
         JPanel jpSplit = new JPanel();
         jpSplit.setLayout(new java.awt.BorderLayout());
         jpSplit.setLayout(new GridLayout(1, 2));
-        jpSplit.add(new JButton());
-        //add charts
-        ChartPanel cp1 = pieChart();
-        ChartPanel cp2 = lineChart();
-        //create holder panel to hold all charts
+        JTextArea text1 = new JTextArea();
+        JScrollPane scroll = new JScrollPane (text1,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jpSplit.add(scroll);
         JPanel chartHolder = new JPanel();
-        chartHolder.setLayout(new GridLayout(1,2));
-        chartHolder.add(cp1);
-        chartHolder.add(cp2);
-        //add holder panel into jpSplit
         jpSplit.add(chartHolder);
+
+        submitButton.addActionListener(e -> {
+            submitButton.setText("Submitted");
+            String data = " ";
+            String arg = " ";
+            for(int i= 0; i<14 ; i++) {
+                String value = (table.getModel().getValueAt(0, i)).toString();
+                String name = table.getModel().getColumnName(i);
+                String temp = name+":"+value+"\n";
+                arg = arg + value+" ";
+                data = data + temp;
+            }
+            text1.setText("Submit button clicked!"+"\n"+"\nParameterString:\n"+arg+"\n"+
+                    "-------------------------------------------\n"+data);
+        });
+        cancelButton.addActionListener(e -> {
+            cancelButton.setText("Charts generated");
+            //add charts
+            ChartPanel cp1 = pieChart();
+            ChartPanel cp2 = lineChart();
+            //create holder panel to hold all charts
+            chartHolder.setLayout(new GridLayout(1, 2));
+            chartHolder.add(cp1);
+            chartHolder.add(cp2);
+        });
+        closeButton.addActionListener(e -> {
+            closeButton.setText("Cleared");
+        });
 
         //Bottom panel for OrderBook
         JPanel jpResult = new JPanel();
@@ -147,14 +169,16 @@ public class Ticker extends JFrame {
         myFrame.setVisible(true);
         myFrame.addWindowListener(new WindowCloser());
     }
+
     //generate line chart
-    public ChartPanel lineChart(){
+    public ChartPanel lineChart() {
         JFreeChart chart = LineChart.createLineChart();
         return new ChartPanel(chart);
     }
+
     //generate pie chart
-    public ChartPanel pieChart(){
-        JFreeChart chart = model.PieChart.createPieChart();
+    public ChartPanel pieChart() {
+        JFreeChart chart = PieChart.createPieChart();
         return new ChartPanel(chart);
     }
 

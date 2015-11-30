@@ -2,6 +2,7 @@ package model;
 
 import controller.SymbolController;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -73,6 +74,16 @@ public class TableData extends AbstractTableModel {
         return true;
     }
 
+//    public String  getInputData(JTable table){
+//        String data = null;
+//        for(int i= 0; i< getColumnCount(); i++) {
+//            String name = getColumnName(i);
+//            String value = (table.getModel().getValueAt(0, 0)).toString();
+//            String temp = name+", "+value+",";
+//            data += temp;
+//        }
+//        return data;
+//    }
     //getter
     public Object getValueAt(int rowIndex, int columnIndex) {
         RecordData recordData = data.get(rowIndex);
@@ -139,4 +150,5 @@ public class TableData extends AbstractTableModel {
         else if (columnIndex == 13)
             recordData.setT4(Integer.parseInt((String) aValue));
     }
+
 }
