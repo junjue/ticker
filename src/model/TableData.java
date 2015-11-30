@@ -27,11 +27,11 @@ public class TableData extends AbstractTableModel {
         symbolController = SymbolController.getInstance();
         data = new ArrayList<>();
         columnNames = new Vector<>();
-
+        //read file and generate into table header row
         try {
             FileInputStream fin = new FileInputStream(datafile);
             BufferedReader br = new BufferedReader(new InputStreamReader(fin));
-            // extract column names
+            // extract column names separated by |
             StringTokenizer st1 = new StringTokenizer(br.readLine(), "|");
             while (st1.hasMoreTokens())
                 columnNames.addElement(st1.nextToken());
@@ -40,9 +40,8 @@ public class TableData extends AbstractTableModel {
             e.printStackTrace();
         }
 
-
+//default values for parameters
         //for (SymbolData symbolData : symbolController.getSymbols("")) {
-
         RecordData recordData = new RecordData(new MarketData("US"), new SymbolData("Choose Symbol"), 100, 100, 5, 5000, 0.02, 20, 0.6, 20, 10, 45, 300, 300);
         data.add(recordData);
         //}
@@ -74,6 +73,7 @@ public class TableData extends AbstractTableModel {
         return true;
     }
 
+    //getter
     public Object getValueAt(int rowIndex, int columnIndex) {
         RecordData recordData = data.get(rowIndex);
         if (columnIndex == 0)
@@ -107,6 +107,7 @@ public class TableData extends AbstractTableModel {
         return null;
     }
 
+    //setter
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         RecordData recordData = data.get(rowIndex);
         if (columnIndex == 0)

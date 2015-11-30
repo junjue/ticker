@@ -20,6 +20,7 @@ public class SymbolController {
 
     public List<SymbolData> getSymbols(String marketName) {
         List<SymbolData> symbolDataList = new ArrayList<>();
+        //read file and add symbols  into drop down list
         try {
             Scanner s = new Scanner(new File("symbols.txt"));
             while (s.hasNext()) {
