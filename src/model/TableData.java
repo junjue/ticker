@@ -43,7 +43,7 @@ public class TableData extends AbstractTableModel {
 
 //default values for parameters
         //for (SymbolData symbolData : symbolController.getSymbols("")) {
-        RecordData recordData = new RecordData(new MarketData("US"), new SymbolData("Choose Symbol"), 100, 100, 5, 5000, 0.02, 20, 0.6, 20, 10, 45, 300, 300);
+        RecordData recordData = new RecordData(new MarketData("USA"), new SymbolData("Choose Symbol"), 100, 100, 5, 5000, 0.02, 20, 0.6, 20, 10, 45, 300, 300);
         data.add(recordData);
         //}
 

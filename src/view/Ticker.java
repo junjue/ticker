@@ -111,7 +111,8 @@ public class Ticker extends JFrame {
         //top panel for input
         JPanel jpInput = new JPanel();
         jpInput.setBackground(new Color(0x003F3E));
-        jpInput.add(table);
+//        jpInput.add(table);
+        jpInput.add(new JScrollPane(table));
         //added buttons
         JButton submitButton = new JButton("Submit");
         jpInput.add(submitButton);
