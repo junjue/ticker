@@ -6,7 +6,6 @@ import controller.DropdownGenerator;
 import controller.SymbolController;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -17,8 +16,8 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class Ticker extends JFrame {
-
-    public final static int REFRESH_INTERVAL = 1000;
+    //set refresh interval
+    public final static int REFRESH_INTERVAL = 3000;
     private TableData tableData;
 
     public Ticker(String dataFilePath) {
@@ -118,11 +117,19 @@ public class Ticker extends JFrame {
         JPanel jpInput = new JPanel();
         jpInput.setBackground(new Color(0x003F3E));
 //        jpInput.add(table);
-        jpInput.add(new JScrollPane(table));
+         JScrollPane tableScroll = new JScrollPane(table,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        tableScroll.setPreferredSize(new java.awt.Dimension(1084, 100));
+
+        JScrollBar vertical = tableScroll.getVerticalScrollBar();
+        vertical.setValue( vertical.getMaximum() );
+        jpInput.add(tableScroll);
+
+//        jpInput.add(new JScrollPane(table));
         //added buttons
         final JButton submitButton = new JButton("Submit");
         jpInput.add(submitButton);
-        final JButton cancelButton = new JButton("Charts");
+        final JButton cancelButton = new JButton("Get Charts");
         jpInput.add(cancelButton);
         final JButton closeButton = new JButton("Close");
         jpInput.add(closeButton);
@@ -131,34 +138,36 @@ public class Ticker extends JFrame {
         jpSplit.setLayout(new java.awt.BorderLayout());
         jpSplit.setLayout(new GridLayout(1, 2));
         final JTextArea consoleText = new JTextArea();
-        JScrollPane scroll = new JScrollPane(consoleText,
+        JScrollPane consoleScroll = new JScrollPane(consoleText,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroll.setPreferredSize(new java.awt.Dimension(1600, 300));
-        jpSplit.add(scroll);
+        consoleScroll.setPreferredSize(new java.awt.Dimension(600, 300));
+        jpSplit.add(consoleScroll);
         final JPanel chartHolder = new JPanel();
         jpSplit.add(chartHolder);
 
+        //show parameters value after click
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 submitButton.setText("Submitted");
-                String data = " ";
-                String arg = " ";
+                closeButton.setText("Clear");
+                String shownInfo = " ";
+                String argToArgo = " ";
                 for (int i = 0; i < 14; i++) {
                     String value = (table.getModel().getValueAt(0, i)).toString();
                     String name = table.getModel().getColumnName(i);
                     String temp = name + ":" + value + "\n";
-                    arg = arg + value + " ";
-                    data = data + temp;
+                    argToArgo = argToArgo + value + " ";
+                    shownInfo = shownInfo + temp;
                 }
-                consoleText.setText("Submit button clicked!" + "\n" + "\nParameterString:\n" + arg + "\n" +
-                        "-------------------------------------------\n" + data);
+                consoleText.setText("Submit button clicked!" + "\n" + "\nParameterString:\n" + argToArgo + "\n" +
+                        "-------------------------------------------\n" + shownInfo);
             }
         });
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cancelButton.setText("Charts generated");
+                if (cancelButton.getText()!="Charts generated"){
                 //add charts
                 ChartPanel cp1 = Ticker.this.pieChart();
                 ChartPanel cp2 = Ticker.this.lineChart();
@@ -166,11 +175,17 @@ public class Ticker extends JFrame {
                 chartHolder.setLayout(new GridLayout(1, 2));
                 chartHolder.add(cp1);
                 chartHolder.add(cp2);
+                cancelButton.setText("Charts generated");
+                closeButton.setText("Clear");
+                }
             }
         });
-        closeButton.addActionListener(new ActionListener() {
+        //clear text and chart area
+         closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                submitButton.setText("Submit");
+                cancelButton.setText("Get Chart");
                 closeButton.setText("Cleared");
                 consoleText.setText("");
                 chartHolder.removeAll();
@@ -180,19 +195,18 @@ public class Ticker extends JFrame {
 
         //Bottom panel for OrderBook
         JPanel jpResult = new JPanel();
-        JTextArea refreshTextArea = new JTextArea(tableData.getColumnNameString());
-        refreshTextArea.setFont(new Font("SanSerif", Font.PLAIN, 8));
-        //JScrollPane refreshScrollPane = new JScrollPane(refreshTextArea,
-        //        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        final JTextArea refreshTextArea= new JTextArea(tableData.getColumnNameString());
+        refreshTextArea.setFont(new Font("SanSerif", Font.PLAIN, 12));
+        JScrollPane refreshScroll = new JScrollPane(refreshTextArea,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        refreshScroll.setPreferredSize(new java.awt.Dimension(1084, 248));
         final TextAreaOutputStream textAreaOutputStream = new TextAreaOutputStream(refreshTextArea);
-        jpResult.add(refreshTextArea);
-        //jpResult.add(refreshScrollPane);
-        //jpResult.setBackground(new Color(0x00555555));
+        jpResult.add(refreshScroll);
 
         Timer timer = new Timer(REFRESH_INTERVAL, new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 //Refresh the panel
-                //panel.revalidate();
                 textAreaOutputStream.write(tableData.getRowDataString(0));
             }
         });
