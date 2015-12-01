@@ -1,18 +1,25 @@
 package view;
+
 import model.*;
 import model.TableData;
 import controller.DropdownGenerator;
 import controller.SymbolController;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class Ticker extends JFrame {
+
+    public final static int REFRESH_INTERVAL = 1000;
+    private TableData tableData;
 
     public Ticker(String dataFilePath) {
         //read table column file
@@ -32,14 +39,13 @@ public class Ticker extends JFrame {
     //table initialization
     public JTable tableInit(String dataFilePath) {
         JTable table;
-        TableData model;
-        model = new TableData(dataFilePath);
+        tableData = new TableData(dataFilePath);
         table = new JTable();
-        table.setModel(model);
+        table.setModel(tableData);
         table.setRowHeight(25);
         table.createDefaultColumnsFromModel();
         table.setAutoCreateRowSorter(true);
-        model.addTableModelListener(table);
+        tableData.addTableModelListener(table);
         //read table drop down options from file
         getStringListFromFile(table, "market.txt", 0);
         getSymbolFromFile(table, 1);
@@ -100,7 +106,7 @@ public class Ticker extends JFrame {
         addDropdownColumn.setCellEditor(new DefaultCellEditor(columnComboBox));
     }
 
-    public void layoutInit(JTable table) {
+    public void layoutInit(final JTable table) {
         //customize frame layout
         JFrame myFrame = new JFrame("Algo v1.0");
         myFrame.setLocation(200, 100);
@@ -114,54 +120,83 @@ public class Ticker extends JFrame {
 //        jpInput.add(table);
         jpInput.add(new JScrollPane(table));
         //added buttons
-        JButton submitButton = new JButton("Submit");
+        final JButton submitButton = new JButton("Submit");
         jpInput.add(submitButton);
-        JButton cancelButton = new JButton("Charts");
+        final JButton cancelButton = new JButton("Charts");
         jpInput.add(cancelButton);
-        JButton closeButton = new JButton("Close");
+        final JButton closeButton = new JButton("Close");
         jpInput.add(closeButton);
         //center panel split for TickData and Charts
         JPanel jpSplit = new JPanel();
         jpSplit.setLayout(new java.awt.BorderLayout());
         jpSplit.setLayout(new GridLayout(1, 2));
-        JTextArea text1 = new JTextArea();
-        JScrollPane scroll = new JScrollPane (text1,
+        final JTextArea consoleText = new JTextArea();
+        JScrollPane scroll = new JScrollPane(consoleText,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jpSplit.add(scroll);
-        JPanel chartHolder = new JPanel();
+        final JPanel chartHolder = new JPanel();
         jpSplit.add(chartHolder);
 
-        submitButton.addActionListener(e -> {
-            submitButton.setText("Submitted");
-            String data = " ";
-            String arg = " ";
-            for(int i= 0; i<14 ; i++) {
-                String value = (table.getModel().getValueAt(0, i)).toString();
-                String name = table.getModel().getColumnName(i);
-                String temp = name+":"+value+"\n";
-                arg = arg + value+" ";
-                data = data + temp;
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitButton.setText("Submitted");
+                String data = " ";
+                String arg = " ";
+                for (int i = 0; i < 14; i++) {
+                    String value = (table.getModel().getValueAt(0, i)).toString();
+                    String name = table.getModel().getColumnName(i);
+                    String temp = name + ":" + value + "\n";
+                    arg = arg + value + " ";
+                    data = data + temp;
+                }
+                consoleText.setText("Submit button clicked!" + "\n" + "\nParameterString:\n" + arg + "\n" +
+                        "-------------------------------------------\n" + data);
             }
-            text1.setText("Submit button clicked!"+"\n"+"\nParameterString:\n"+arg+"\n"+
-                    "-------------------------------------------\n"+data);
         });
-        cancelButton.addActionListener(e -> {
-            cancelButton.setText("Charts generated");
-            //add charts
-            ChartPanel cp1 = pieChart();
-            ChartPanel cp2 = lineChart();
-            //create holder panel to hold all charts
-            chartHolder.setLayout(new GridLayout(1, 2));
-            chartHolder.add(cp1);
-            chartHolder.add(cp2);
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cancelButton.setText("Charts generated");
+                //add charts
+                ChartPanel cp1 = Ticker.this.pieChart();
+                ChartPanel cp2 = Ticker.this.lineChart();
+                //create holder panel to hold all charts
+                chartHolder.setLayout(new GridLayout(1, 2));
+                chartHolder.add(cp1);
+                chartHolder.add(cp2);
+            }
         });
-        closeButton.addActionListener(e -> {
-            closeButton.setText("Cleared");
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                closeButton.setText("Cleared");
+                consoleText.setText("");
+                chartHolder.removeAll();
+                chartHolder.updateUI();
+            }
         });
 
         //Bottom panel for OrderBook
         JPanel jpResult = new JPanel();
-        jpResult.setBackground(new Color(0x00555555));
+        JTextArea refreshTextArea = new JTextArea(tableData.getColumnNameString());
+        refreshTextArea.setFont(new Font("SanSerif", Font.PLAIN, 8));
+        //JScrollPane refreshScrollPane = new JScrollPane(refreshTextArea,
+        //        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        final TextAreaOutputStream textAreaOutputStream = new TextAreaOutputStream(refreshTextArea);
+        jpResult.add(refreshTextArea);
+        //jpResult.add(refreshScrollPane);
+        //jpResult.setBackground(new Color(0x00555555));
+
+        Timer timer = new Timer(REFRESH_INTERVAL, new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                //Refresh the panel
+                //panel.revalidate();
+                textAreaOutputStream.write(tableData.getRowDataString(0));
+            }
+        });
+
+        timer.start();
 
         //added 3 panels into frame
         myFrame.getContentPane().add(jpInput);
