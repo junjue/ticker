@@ -127,6 +127,7 @@ public class Ticker extends JFrame {
         JTextArea text1 = new JTextArea();
         JScrollPane scroll = new JScrollPane (text1,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroll.setPreferredSize(new java.awt.Dimension(1600, 300));
         jpSplit.add(scroll);
         JPanel chartHolder = new JPanel();
         jpSplit.add(chartHolder);
