@@ -2,7 +2,6 @@ package model;
 
 import controller.SymbolController;
 
-import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -41,7 +40,7 @@ public class TableData extends AbstractTableModel {
             e.printStackTrace();
         }
 
-//default values for parameters
+        //default values for parameters
         //for (SymbolData symbolData : symbolController.getSymbols("")) {
         RecordData recordData = new RecordData(new MarketData("USA"), new SymbolData("Choose Symbol"), 100, 100, 5, 5000, 0.02, 20, 0.6, 20, 10, 45, 300, 300);
         data.add(recordData);
@@ -74,16 +73,30 @@ public class TableData extends AbstractTableModel {
         return true;
     }
 
-//    public String  getInputData(JTable table){
-//        String data = null;
-//        for(int i= 0; i< getColumnCount(); i++) {
-//            String name = getColumnName(i);
-//            String value = (table.getModel().getValueAt(0, 0)).toString();
-//            String temp = name+", "+value+",";
-//            data += temp;
-//        }
-//        return data;
-//    }
+    public String getColumnNameString() {
+        String colName = "";
+
+        for (int i = 0; i < getColumnCount(); i++)
+            colName += columnNames.elementAt(i) + "\t";
+        colName += "\n";
+
+        return colName;
+    }
+
+    public String getRowDataString(int rowIndex) {
+        String data = "";
+        for (int i = 0; i < getColumnCount(); i++) {
+            String temp;
+            if (getValueAt(rowIndex, i) instanceof String)
+                temp = (String) getValueAt(rowIndex, i);
+            else
+                temp = String.valueOf(getValueAt(rowIndex, i));
+            data += temp + "\t";
+        }
+        data += "\n";
+        return data;
+    }
+
     //getter
     public Object getValueAt(int rowIndex, int columnIndex) {
         RecordData recordData = data.get(rowIndex);
