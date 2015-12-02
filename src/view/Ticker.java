@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Objects;
 
 public class Ticker extends JFrame {
     //set refresh interval
@@ -115,24 +116,24 @@ public class Ticker extends JFrame {
         myFrame.getContentPane().setLayout(gridLayout);
         //top panel for input
         JPanel jpInput = new JPanel();
+        jpInput.setLayout(new GridLayout(2,1));
         jpInput.setBackground(new Color(0x003F3E));
-//        jpInput.add(table);
          JScrollPane tableScroll = new JScrollPane(table,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScroll.setPreferredSize(new java.awt.Dimension(1084, 100));
 
         JScrollBar vertical = tableScroll.getVerticalScrollBar();
         vertical.setValue( vertical.getMaximum() );
-        jpInput.add(tableScroll);
-
-//        jpInput.add(new JScrollPane(table));
         //added buttons
+        JPanel jpBtn = new JPanel();
         final JButton submitButton = new JButton("Submit");
-        jpInput.add(submitButton);
         final JButton cancelButton = new JButton("Get Charts");
-        jpInput.add(cancelButton);
         final JButton closeButton = new JButton("Close");
-        jpInput.add(closeButton);
+        jpBtn.add(submitButton);
+        jpBtn.add(cancelButton);
+        jpBtn.add(closeButton);
+        jpInput.add(tableScroll);
+        jpInput.add(jpBtn);
         //center panel split for TickData and Charts
         JPanel jpSplit = new JPanel();
         jpSplit.setLayout(new java.awt.BorderLayout());
@@ -153,12 +154,13 @@ public class Ticker extends JFrame {
                 closeButton.setText("Clear");
                 String shownInfo = " ";
                 String argToArgo = " ";
-                for (int i = 0; i < 14; i++) {
+//                for (int i = 0; i < 14; i++) {
+                  for (int i=0;  i<table.getColumnCount(); i++){
                     String value = (table.getModel().getValueAt(0, i)).toString();
                     String name = table.getModel().getColumnName(i);
                     String temp = name + ":" + value + "\n";
-                    argToArgo = argToArgo + value + " ";
-                    shownInfo = shownInfo + temp;
+                    argToArgo += value + " ";
+                    shownInfo += temp;
                 }
                 consoleText.setText("Submit button clicked!" + "\n" + "\nParameterString:\n" + argToArgo + "\n" +
                         "-------------------------------------------\n" + shownInfo);
@@ -167,7 +169,7 @@ public class Ticker extends JFrame {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (cancelButton.getText()!="Charts generated"){
+                if (!Objects.equals(cancelButton.getText(), "Charts generated")){
                 //add charts
                 ChartPanel cp1 = Ticker.this.pieChart();
                 ChartPanel cp2 = Ticker.this.lineChart();
